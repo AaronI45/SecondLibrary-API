@@ -17,6 +17,14 @@ class UsuarioDao {
             }
         });
     }
+
+    static async actualizarUsuario(idUsuario, usuario) {
+        return await Usuarios.update(usuario, {
+            where: {
+                idUsuario
+            }
+        });
+    }
     
     static async actualizarEstadoUsuario(idUsuario, nuevoEstado) {
         return await Usuarios.update({

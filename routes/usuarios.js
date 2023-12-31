@@ -4,7 +4,8 @@ const {
     usuariosGet,
     usuariosPost,
     usuariosLogin,
-    usuariosPatchEstadoUsuario
+    usuariosPatchEstadoUsuario,
+    usuariosPutActualizar
     // desbanearUsuario,
     // usuariosUpdate,
     // editarUsuario,
@@ -21,5 +22,6 @@ router.get('/', usuariosGet);
 router.post('/', usuariosPost);
 router.post('/login', usuariosLogin);
 router.patch('/:idUsuario', usuariosPatchEstadoUsuario);
+router.put('/:idUsuario', usuariosPutActualizar);
 
 module.exports = router;

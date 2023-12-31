@@ -5,6 +5,7 @@ const { use } = require('../routes/usuarios');
 const { generarJWT } = require('../helpers/generar-jwt');
 
 const hash = async (text)=> {
+    const hash = crypto.createHash('sha256');
     hash.update(text);
     return hash.digest('hex');
 }
@@ -73,6 +74,39 @@ const usuariosLogin = async (req, res = response) => {
     }
 }
 
+const usuariosPutActualizar = async (req, res = response) => {
+    const {idUsuario} = req.params;
+    const { 
+        Estado_usuario_idEstado_usuario, 
+        Tipo_Usuario_idTipo_Usuario, 
+        nombreUsuario, 
+        contrasena, 
+        nombre, 
+        apellidoPaterno, 
+        apellidoMaterno, 
+        matricula, 
+        correo} = req.body;
+    const hashConstrasena= await hash(contrasena);
+    const usuario = {
+        Estado_usuario_idEstado_usuario, 
+        Tipo_Usuario_idTipo_Usuario, 
+        nombreUsuario, 
+        contrasena: hashConstrasena, 
+        nombre, 
+        apellidoPaterno, 
+        apellidoMaterno, 
+        matricula, 
+        correo
+    }
+    try{
+        const usuarioActualizado = await UsuarioDao.actualizarUsuario(idUsuario, usuario);
+        res.status(201).json(usuarioActualizado);
+    }catch (error){
+        console.error(error);
+        res.status(500).json(error);
+    }
+}
+
 const usuariosPatchEstadoUsuario = async (req, res) => {
     const {idUsuario} = req.params;
     const {Estado_usuario_idEstado_usuario} = req.body;
@@ -90,5 +124,6 @@ module.exports = {
     usuariosGet,
     usuariosPost,
     usuariosLogin,
-    usuariosPatchEstadoUsuario
+    usuariosPutActualizar,
+    usuariosPatchEstadoUsuario,
 }
