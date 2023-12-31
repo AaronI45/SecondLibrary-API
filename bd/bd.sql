@@ -8,19 +8,19 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema SecondLibrary
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema SecondLibrary
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `mydb` ;
+CREATE SCHEMA IF NOT EXISTS `SecondLibrary` DEFAULT CHARACTER SET utf8 ;
+USE `SecondLibrary` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`Libro`
+-- Table `SecondLibrary`.`Libro`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Libro` (
+CREATE TABLE IF NOT EXISTS `SecondLibrary`.`Libro` (
   `idLibro` INT NOT NULL AUTO_INCREMENT,
   `titulo` VARCHAR(100) NULL,
   `autor` VARCHAR(100) NULL,
@@ -35,9 +35,9 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Chat`
+-- Table `SecondLibrary`.`Chat`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Chat` (
+CREATE TABLE IF NOT EXISTS `SecondLibrary`.`Chat` (
   `idChat` INT NOT NULL AUTO_INCREMENT,
   `fechaDeCreacion` DATE NULL,
   PRIMARY KEY (`idChat`))
@@ -45,121 +45,131 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Tipo_Usuario`
+-- Table `SecondLibrary`.`Tipo_Usuario`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Tipo_Usuario` (
+CREATE TABLE IF NOT EXISTS `SecondLibrary`.`Tipo_Usuario` (
   `idTipo_Usuario` INT NOT NULL AUTO_INCREMENT,
   `tipoDeUsuario` VARCHAR(45) NULL,
   PRIMARY KEY (`idTipo_Usuario`))
 ENGINE = InnoDB;
 
 
+CREATE TABLE IF NOT EXISTS `SecondLibrary`.`Estado_usuario`(
+  `idEstado_usuario` INT NOT NULL AUTO_INCREMENT,
+  `estado` VARCHAR(45) NULL,
+  PRIMARY KEY (`idEstado_usuario`)
+) ENGINE = InnoDB;
 -- -----------------------------------------------------
--- Table `mydb`.`Comerciante`
+-- Table `SecondLibrary`.`Comerciante`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Comerciante` (
-  `idComerciante` INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `SecondLibrary`.`Usuario` (
+  `idUsuario` INT NOT NULL AUTO_INCREMENT,
+  `Estado_usuario_idEstado_usuario` INT NOT NULL,
   `Tipo_Usuario_idTipo_Usuario` INT NOT NULL,
   `nombreUsuario` VARCHAR(45) NULL,
-  `contrasena` VARCHAR(45) NULL,
+  `contrasena` VARCHAR(100) NULL,
   `nombre` VARCHAR(45) NULL,
   `apellidoPaterno` VARCHAR(45) NULL,
   `apellidoMaterno` VARCHAR(45) NULL,
   `matricula` VARCHAR(45) NULL,
   `correo` VARCHAR(45) NULL,
-  PRIMARY KEY (`idComerciante`, `Tipo_Usuario_idTipo_Usuario`),
+  PRIMARY KEY (`idUsuario`, `Tipo_Usuario_idTipo_Usuario`, `Estado_usuario_idEstado_usuario`),
   CONSTRAINT `fk_Comerciante_Tipo_Usuario1`
     FOREIGN KEY (`Tipo_Usuario_idTipo_Usuario`)
-    REFERENCES `mydb`.`Tipo_Usuario` (`idTipo_Usuario`)
+    REFERENCES `SecondLibrary`.`Tipo_Usuario` (`idTipo_Usuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Comerciante_Estado_usuario1`
+    FOREIGN KEY (`Estado_usuario_idEstado_usuario`)
+    REFERENCES `SecondLibrary`.`Estado_usuario` (`idEstado_usuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
--- Table `mydb`.`Mensaje`
+-- Table `SecondLibrary`.`Mensaje`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Mensaje` (
+CREATE TABLE IF NOT EXISTS `SecondLibrary`.`Mensaje` (
   `idMensaje` INT NOT NULL AUTO_INCREMENT,
   `Chat_idChat` INT NOT NULL,
-  `Comerciante_idComerciante` INT NOT NULL,
+  `Usuario_idUsuario` INT NOT NULL,
   `contenidoMensaje` VARCHAR(200) NULL,
   `marcaDeTiempo` DATE NULL,
-  PRIMARY KEY (`idMensaje`, `Chat_idChat`, `Comerciante_idComerciante`),
+  PRIMARY KEY (`idMensaje`, `Chat_idChat`, `Usuario_idUsuario`),
   CONSTRAINT `fk_Mensaje_Chat1`
     FOREIGN KEY (`Chat_idChat`)
-    REFERENCES `mydb`.`Chat` (`idChat`)
+    REFERENCES `SecondLibrary`.`Chat` (`idChat`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Mensaje_Comerciante1`
-    FOREIGN KEY (`Comerciante_idComerciante`)
-    REFERENCES `mydb`.`Comerciante` (`idComerciante`)
+  CONSTRAINT `fk_Mensaje_Usuario1`
+    FOREIGN KEY (`Usuario_idUsuario`)
+    REFERENCES `SecondLibrary`.`Usuario` (`idUsuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Comentario`
+-- Table `SecondLibrary`.`Comentario`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Comentario` (
+CREATE TABLE IF NOT EXISTS `SecondLibrary`.`Comentario` (
   `idComentario` INT NOT NULL AUTO_INCREMENT,
   `Comerciante_idComerciante` INT NOT NULL,
-  `Comerciante_idComercianteDeComentario` INT NOT NULL,
+  `Usuario_idUsuario` INT NOT NULL,
   `titulo` VARCHAR(50) NULL,
   `descripcion` VARCHAR(300) NULL,
-  PRIMARY KEY (`idComentario`, `Comerciante_idComerciante`, `Comerciante_idComercianteDeComentario`),
-  CONSTRAINT `fk_Comentario_Comerciante1`
-    FOREIGN KEY (`Comerciante_idComercianteDeComentario`)
-    REFERENCES `mydb`.`Comerciante` (`idComerciante`)
+  PRIMARY KEY (`idComentario`, `Comerciante_idComerciante`, `Usuario_idUsuario`),
+  CONSTRAINT `fk_Comentario_Usuario1`
+    FOREIGN KEY (`Usuario_idUsuario`)
+    REFERENCES `SecondLibrary`.`Usuario` (`idUsuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Comentario_Comerciante2`
+  CONSTRAINT `fk_Comentario_Comerciante1`
     FOREIGN KEY (`Comerciante_idComerciante`)
-    REFERENCES `mydb`.`Comerciante` (`idComerciante`)
+    REFERENCES `SecondLibrary`.`Usuario` (`idUsuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Intercambio`
+-- Table `SecondLibrary`.`Intercambio`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Intercambio` (
+CREATE TABLE IF NOT EXISTS `SecondLibrary`.`Intercambio` (
   `idIntercambio` INT NOT NULL AUTO_INCREMENT,
-  `Comerciante_idComerciante` INT NOT NULL,
+  `Usuario_idUsuario` INT NOT NULL,
   `Libro_idLibro` INT NOT NULL,
   `fechaDeCreacion` DATE NULL,
   `fechaDeFinalizacion` DATE NULL,
-  PRIMARY KEY (`idIntercambio`, `Comerciante_idComerciante`, `Libro_idLibro`),
-  CONSTRAINT `fk_Intercambio_Comerciante1`
-    FOREIGN KEY (`Comerciante_idComerciante`)
-    REFERENCES `mydb`.`Comerciante` (`idComerciante`)
+  PRIMARY KEY (`idIntercambio`, `Usuario_idUsuario`, `Libro_idLibro`),
+  CONSTRAINT `fk_Intercambio_Usuario1`
+    FOREIGN KEY (`Usuario_idUsuario`)
+    REFERENCES `SecondLibrary`.`Comerciante` (`idUsuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Intercambio_Libro1`
     FOREIGN KEY (`Libro_idLibro`)
-    REFERENCES `mydb`.`Libro` (`idLibro`)
+    REFERENCES `SecondLibrary`.`Libro` (`idLibro`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`Comerciante_Con_Chat`
+-- Table `SecondLibrary`.`Comerciante_Con_Chat`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`Comerciante_Con_Chat` (
+CREATE TABLE IF NOT EXISTS `SecondLibrary`.`Usuario_Con_Chat` (
   `Chat_idChat` INT NOT NULL,
-  `Comerciante_idComerciante` INT NOT NULL,
-  PRIMARY KEY (`Chat_idChat`, `Comerciante_idComerciante`),
-  CONSTRAINT `fk_Chat_has_Comerciante_Chat1`
+  `Usuario_idUsuario` INT NOT NULL,
+  PRIMARY KEY (`Chat_idChat`, `Usuario_idUsuario`),
+  CONSTRAINT `fk_Chat_has_Usuario_Chat1`
     FOREIGN KEY (`Chat_idChat`)
-    REFERENCES `mydb`.`Chat` (`idChat`)
+    REFERENCES `SecondLibrary`.`Chat` (`idChat`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Chat_has_Comerciante_Comerciante1`
-    FOREIGN KEY (`Comerciante_idComerciante`)
-    REFERENCES `mydb`.`Comerciante` (`idComerciante`)
+  CONSTRAINT `fk_Chat_has_Usuario_Usuario1`
+    FOREIGN KEY (`Usuario_idUsuario`)
+    REFERENCES `SecondLibrary`.`Usuario` (`idUsuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

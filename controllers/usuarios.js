@@ -1,0 +1,94 @@
+const {response} = require('express');
+const crypto = require('crypto');
+const UsuarioDao = require('../dao/usuario-dao');
+const { use } = require('../routes/usuarios');
+const { generarJWT } = require('../helpers/generar-jwt');
+
+const hash = async (text)=> {
+    hash.update(text);
+    return hash.digest('hex');
+}
+
+const usuariosGet = async(req, res = response) => {
+    try{
+        const usuarios = await UsuarioDao.listarUsuarios();
+        res.json(usuarios);
+    }catch{
+        res.status(500).json( {message: error});
+    
+    }
+}
+
+const usuariosPost = async (req, res = response) => {
+    const {
+        //TODO: checar que los campos sean correctos
+        //TODO: checar que el usuario no exista
+        //TODO: checar que el correo no exista
+        //TODO: checar que el nombre de usuario sea unico
+        //TODO: checar que la matricula sea unica
+        //TODO: checar que el correo sea unico
+        nombreUsuario, 
+        Tipo_Usuario_idTipo_Usuario, 
+        contrasena, 
+        nombre, 
+        apellidoPaterno, 
+        apellidoMaterno, 
+        matricula, 
+        correo} = req.body;
+    const contrasenaHash = await hash(contrasena);
+    const usuario = {
+        idUsuario: 0,
+        Estado_usuario_idEstado_usuario: 1,
+        Tipo_Usuario_idTipo_Usuario,
+        nombreUsuario,
+        contrasena: contrasenaHash,
+        nombre,
+        apellidoPaterno,
+        apellidoMaterno,
+        matricula,
+        correo
+    }
+    try{
+        const usuarioCreado = await UsuarioDao.crearUsuario(usuario);
+        res.status(201).json(usuarioCreado);
+    }catch(error){
+        res.status(500).json(error);
+    }
+}
+
+const usuariosLogin = async (req, res = response) => {
+    const {nombreUsuario, contrasena} = req.body;
+    const contrasenaHash = await hash(contrasena);
+    try{
+        const usuario = await UsuarioDao.login(nombreUsuario, contrasenaHash);
+        
+        const token = await generarJWT(usuario.idUsuario);
+        res.json({
+            usuario,
+            token
+        });
+    }catch(error){
+        console.error(error);
+        res.status(401).json({message: 'Usuario o contraseña incorrectos'});
+    }
+}
+
+const usuariosPatchEstadoUsuario = async (req, res) => {
+    const {idUsuario} = req.params;
+    const {Estado_usuario_idEstado_usuario} = req.body;
+    try{
+        const usuarioActualizado = await UsuarioDao.actualizarEstadoUsuario(idUsuario, Estado_usuario_idEstado_usuario);
+        res.status(201).json(usuarioActualizado);
+    }catch(error){
+        console.error(error);
+        res.status(500).json(error);
+    }
+}
+
+
+module.exports = {
+    usuariosGet,
+    usuariosPost,
+    usuariosLogin,
+    usuariosPatchEstadoUsuario
+}
