@@ -178,3 +178,17 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+INSERT INTO `SecondLibrary`.`Tipo_Usuario` (`tipoDeUsuario`) 
+VALUES ('Administrador');
+INSERT INTO `SecondLibrary`.`Tipo_Usuario` (`tipoDeUsuario`)
+VALUES ('Comerciante');
+
+INSERT INTO `SecondLibrary`.`Estado_usuario` (`estado`)
+VALUES ('no_aprobado'); 
+
+INSERT INTO `SecondLibrary`.`Estado_usuario` (`estado`)
+VALUES ('aprobado');
+
+INSERT INTO `SecondLibrary`.`Estado_usuario` (`estado`)
+VALUES ('bloqueado');

@@ -14,7 +14,7 @@ const usuariosGet = async(req, res = response) => {
     try{
         const usuarios = await UsuarioDao.listarUsuarios();
         res.json(usuarios);
-    }catch{
+    }catch(error){
         res.status(500).json( {message: error});
     
     }

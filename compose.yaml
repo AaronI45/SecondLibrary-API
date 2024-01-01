@@ -9,19 +9,30 @@
 # https://github.com/docker/awesome-compose
 services:
   secondlibrary:
+    container_name: secondlibrary
     build: .
+    volumes:
+      - .:/app
     ports:
-      - 8081:8081
+      - "8081:8081"
+    environment:
+      - PORT = 8081
+      - NODE_ENV = development 
+      - JWT_SECRET = C0ntraS3N4S3cret4
     links:
       - db
 
   db:
-    image: mysql:8.0
+    image: sldb:dev
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
     volumes:
-      - ./db:/docker-entrypoint-initdb.d
+      - db-data:/var/lib/mysql
 
-  volumes:
-    db-data:
+volumes:
+  db-data:
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
 # start the database before your application. The `db-data` volume persists the
