@@ -9,6 +9,15 @@ class UsuarioDao {
         return await Usuarios.findByPk(idUsuario, {attributes: {exclude: ['contrasena']}});
     }
 
+    static async getPasswordUsuarioPorId(idUsuario, contrasena) {
+        return await Usuarios.findOne({
+            where: {
+                idUsuario,
+                contrasena
+            }
+        });
+    }
+
     static async crearUsuario(usuario) {
         return await Usuarios.create(usuario);
     }
@@ -44,6 +53,30 @@ class UsuarioDao {
         return await Usuarios.destroy({
             where: {
                 idUsuario
+            }
+        });
+    }
+
+    static async validarNombreUsuario(nombreUsuario) {
+        return await Usuarios.findOne({
+            where: {
+                nombreUsuario
+            }
+        });
+    }
+
+    static async validarMatricula(matricula) {
+        return await Usuarios.findOne({
+            where: {
+                matricula
+            }
+        });
+    }
+
+    static async validarCorreo(correo) {
+        return await Usuarios.findOne({
+            where: {
+                correo
             }
         });
     }

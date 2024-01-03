@@ -13,6 +13,7 @@ const {
     //mensaje
 } = require ('../controllers/usuarios');
 const { validarJWT } = require('../middlewares/validar-jwt.js');
+const { validarCamposUsuario } = require('../middlewares/validar-campos-usuario.js');
 
 
 
@@ -20,11 +21,11 @@ const router = Router();
 
 router.get('/', usuariosGet);
 router.get('/:idUsuario', usuariosGetPorId);
-router.post('/', usuariosPost);
+router.post('/',[validarCamposUsuario], usuariosPost);
 router.post('/login', usuariosLogin);
 router.patch('/:idUsuario', usuariosPatchEstadoUsuario);
-router.put('/:idUsuario', usuariosPutActualizar);
-router.delete('/', validarJWT, usuariosDelete);
+router.put('/:idUsuario',[validarJWT], usuariosPutActualizar);
+router.delete('/', [validarJWT], usuariosDelete);
 
 
 
