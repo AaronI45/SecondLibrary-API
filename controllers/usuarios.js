@@ -73,6 +73,9 @@ const usuariosLogin = async (req, res = response) => {
     try{
         const usuario = await UsuarioDao.login(nombreUsuario, contrasenaHash);
         
+        if (!usuario){
+            return res.status(401).json({message: 'Usuario o contraseña incorrectos'});
+        }
         const token = await generarJWT(usuario);
         res.json({
             usuario,

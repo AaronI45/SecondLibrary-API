@@ -17,12 +17,13 @@ class ComentarioDao{
         });
     }
 
-    static async crearComentario(idComerciante, idUsuario, titulo, comentario){
+    static async crearComentario(idComerciante, idUsuario, titulo, calificacion, descripcion){
         return await Comentarios.create({
             Comerciante_idComerciante: idComerciante,
             Usuario_idUsuario: idUsuario,
             titulo,
-            descripcion: comentario
+            calificacion,
+            descripcion
         });
     }
 

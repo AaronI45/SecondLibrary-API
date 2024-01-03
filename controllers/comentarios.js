@@ -24,9 +24,9 @@ const comentariosUsuarioGet = async(req, res = response) => {
 
 const comentariosPost = async (req, res = response) => {
     const idUsuario = req.usuario.idUsuario;
-    const {idComerciante, titulo, comentario} = req.body;
+    const {idComerciante, titulo, calificacion,comentario} = req.body;
     try{
-        const nuevoComentario = await ComentarioDao.crearComentario(idComerciante, idUsuario, titulo, comentario);
+        const nuevoComentario = await ComentarioDao.crearComentario(idComerciante, idUsuario, titulo, calificacion, comentario);
         res.status(201).json(nuevoComentario);
     }catch(error){
         res.status(500).json( {message: error});

@@ -23,7 +23,7 @@ services:
       - db
 
   db:
-    image: sldb:dev
+    build: ./bd/.
     ports:
       - "3306:3306"
     environment:

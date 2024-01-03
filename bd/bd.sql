@@ -111,23 +111,25 @@ CREATE TABLE IF NOT EXISTS `SecondLibrary`.`Comentario` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
 -- Table `SecondLibrary`.`Intercambio`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SecondLibrary`.`Intercambio` (
   `idIntercambio` INT NOT NULL AUTO_INCREMENT,
-  `Usuario_idUsuario` INT NOT NULL,
-  `isbn` BIGINT NOT NULL,
+  `Comerciante_idComerciante` INT NOT NULL,
+  `Usuario_idUsuario` INT NULL,
+  `isbnComerciante` VARCHAR(20) NOT NULL,
+  `isbnUsuario` VARCHAR(20) NULL,
+  `estadoIntercambio` VARCHAR(45) NOT NULL,
   `estadoLibro` VARCHAR(300) NOT NULL,
   `fechaDeCreacion` DATE NULL,
   `fechaDeFinalizacion` DATE NULL,
-  PRIMARY KEY (`idIntercambio`, `Usuario_idUsuario`),
-  CONSTRAINT `fk_Intercambio_Usuario1`
-    FOREIGN KEY (`Usuario_idUsuario`)
-    REFERENCES `SecondLibrary`.`Comerciante` (`idUsuario`)
+  PRIMARY KEY (`idIntercambio`, `Comerciante_idComerciante`),
+    FOREIGN KEY (`Comerciante_idComerciante`)
+    REFERENCES `SecondLibrary`.`Usuario` (`idUsuario`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION
+)
 ENGINE = InnoDB;
 
 
