@@ -21,6 +21,7 @@ class Server{
 
     routes(){
         this.app.use('/api/v1/usuarios', require('../routes/usuarios'));
+        this.app.use('/api/v1/comentarios', require('../routes/comentarios'));
     }
 
     listen(){

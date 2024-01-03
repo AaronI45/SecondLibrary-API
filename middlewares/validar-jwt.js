@@ -9,13 +9,23 @@ const validarJWT = (req = request, res = response, next) => {
         });
     }
     try{
-        const {uid} = jwt.verify(token, process.env.JWT_SECRET);
-        req.uid = uid;
-        next();
+        jwt.verify(token, process.env.JWT_SECRET, (err, usuario) => {
+            if(err){
+                return res.status(403).json({
+                    msg: 'Token no valido'
+                });
+            }
+            req.usuario = usuario.usuario;
+            next();
+        });
     }catch(error){
         console.log(error);
-        res.status(401).json({
+        res.status(403).json({
             msg: 'Token no valido'
         });
     }
+}
+
+module.exports = {
+    validarJWT
 }

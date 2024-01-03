@@ -10,29 +10,8 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema SecondLibrary
 -- -----------------------------------------------------
-
--- -----------------------------------------------------
--- Schema SecondLibrary
--- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `SecondLibrary` DEFAULT CHARACTER SET utf8 ;
 USE `SecondLibrary` ;
-
--- -----------------------------------------------------
--- Table `SecondLibrary`.`Libro`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `SecondLibrary`.`Libro` (
-  `idLibro` INT NOT NULL AUTO_INCREMENT,
-  `titulo` VARCHAR(100) NULL,
-  `autor` VARCHAR(100) NULL,
-  `ISBN` INT NULL,
-  `sinopsis` VARCHAR(400) NULL,
-  `idioma` VARCHAR(50) NULL,
-  `fechaDePublicacion` DATE NULL,
-  `estado` VARCHAR(45) NULL,
-  `imagen` VARCHAR(45) NULL,
-  PRIMARY KEY (`idLibro`))
-ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `SecondLibrary`.`Chat`
@@ -117,6 +96,7 @@ CREATE TABLE IF NOT EXISTS `SecondLibrary`.`Comentario` (
   `Comerciante_idComerciante` INT NOT NULL,
   `Usuario_idUsuario` INT NOT NULL,
   `titulo` VARCHAR(50) NULL,
+  `calificacion` FLOAT NOT NULL,
   `descripcion` VARCHAR(300) NULL,
   PRIMARY KEY (`idComentario`, `Comerciante_idComerciante`, `Usuario_idUsuario`),
   CONSTRAINT `fk_Comentario_Usuario1`
@@ -138,18 +118,14 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `SecondLibrary`.`Intercambio` (
   `idIntercambio` INT NOT NULL AUTO_INCREMENT,
   `Usuario_idUsuario` INT NOT NULL,
-  `Libro_idLibro` INT NOT NULL,
+  `isbn` BIGINT NOT NULL,
+  `estadoLibro` VARCHAR(300) NOT NULL,
   `fechaDeCreacion` DATE NULL,
   `fechaDeFinalizacion` DATE NULL,
-  PRIMARY KEY (`idIntercambio`, `Usuario_idUsuario`, `Libro_idLibro`),
+  PRIMARY KEY (`idIntercambio`, `Usuario_idUsuario`),
   CONSTRAINT `fk_Intercambio_Usuario1`
     FOREIGN KEY (`Usuario_idUsuario`)
     REFERENCES `SecondLibrary`.`Comerciante` (`idUsuario`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Intercambio_Libro1`
-    FOREIGN KEY (`Libro_idLibro`)
-    REFERENCES `SecondLibrary`.`Libro` (`idLibro`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

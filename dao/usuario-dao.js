@@ -5,6 +5,10 @@ class UsuarioDao {
         return await Usuarios.findAll({attributes: {exclude: ['contrasena']}});
     }
 
+    static async getUsuarioPorId(idUsuario) {
+        return await Usuarios.findByPk(idUsuario, {attributes: {exclude: ['contrasena']}});
+    }
+
     static async crearUsuario(usuario) {
         return await Usuarios.create(usuario);
     }
@@ -15,7 +19,7 @@ class UsuarioDao {
                 nombreUsuario,
                 contrasena
             }
-        });
+        }, {attributes: {exclude: ['contrasena']}});
     }
 
     static async actualizarUsuario(idUsuario, usuario) {
@@ -30,6 +34,14 @@ class UsuarioDao {
         return await Usuarios.update({
             Estado_usuario_idEstado_usuario: nuevoEstado
         }, {
+            where: {
+                idUsuario
+            }
+        });
+    }
+
+    static async eliminarUsuario(idUsuario) {
+        return await Usuarios.destroy({
             where: {
                 idUsuario
             }

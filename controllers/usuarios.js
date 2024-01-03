@@ -1,8 +1,8 @@
-const {response} = require('express');
+const {request, response} = require('express');
 const crypto = require('crypto');
 const UsuarioDao = require('../dao/usuario-dao');
 const { use } = require('../routes/usuarios');
-const { generarJWT } = require('../helpers/generar-jwt');
+const { generarJWT } = require('../helpers/generar-jwt.js');
 
 const hash = async (text)=> {
     const hash = crypto.createHash('sha256');
@@ -17,6 +17,16 @@ const usuariosGet = async(req, res = response) => {
     }catch(error){
         res.status(500).json( {message: error});
     
+    }
+}
+
+const usuariosGetPorId = async(req, res = response) => {
+    const {idUsuario} = req.params;
+    try{
+        const usuario = await UsuarioDao.getUsuarioPorId(idUsuario);
+        res.json(usuario);
+    }catch(error){
+        res.status(500).json( {message: error});
     }
 }
 
@@ -63,7 +73,7 @@ const usuariosLogin = async (req, res = response) => {
     try{
         const usuario = await UsuarioDao.login(nombreUsuario, contrasenaHash);
         
-        const token = await generarJWT(usuario.idUsuario);
+        const token = await generarJWT(usuario);
         res.json({
             usuario,
             token
@@ -119,11 +129,23 @@ const usuariosPatchEstadoUsuario = async (req, res) => {
     }
 }
 
+const usuariosDelete = async (req = request, res = response) => {
+    const uid = req.usuario.idUsuario;
+    try{
+        await UsuarioDao.eliminarUsuario(uid);
+        res.json({uid});
+    }catch(error){
+        console.error(error);
+        res.status(500).json(error);
+    }
+}
 
 module.exports = {
     usuariosGet,
+    usuariosGetPorId,
     usuariosPost,
     usuariosLogin,
     usuariosPutActualizar,
     usuariosPatchEstadoUsuario,
+    usuariosDelete
 }
