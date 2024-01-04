@@ -12,8 +12,27 @@ const comentariosComercianteGet = async(req, res = response) => {
     }
 }
 
+const comentarioGet = async(req, res = response) => {
+    const {idComentario} = req.params;
+    try{
+        const comentario = await ComentarioDao.getComentarioPorId(idComentario);
+        res.json(comentario);
+    }catch(error){
+        res.status(500).json( {message: error});
+    }
+}
+
+const comentariosGet = async(req, res = response) => {
+    try{
+        const comentarios = await ComentarioDao.listarComentarios();
+        res.json(comentarios);
+    }catch(error){
+        res.status(500).json( {message: error});
+    }
+}
+
 const comentariosUsuarioGet = async(req, res = response) => {
-    const idUsuario= req.usuario.idUsuario;
+    const {idUsuario} = req.params;
     try{
         const comentarios = await ComentarioDao.getComentariosUsuario(idUsuario);
         res.json(comentarios);
@@ -22,11 +41,34 @@ const comentariosUsuarioGet = async(req, res = response) => {
     }
 }
 
+const comentariosComercianteGetCalificacion = async(req, res = response) => {
+    const {idComerciante} = req.params;
+    try{
+        const comentarios = await ComentarioDao.getPromedioCalificacion(idComerciante);
+        res.json(comentarios);
+    }catch(error){
+        res.status(500).json( {message: error});
+    }
+}
+
 const comentariosPost = async (req, res = response) => {
     const idUsuario = req.usuario.idUsuario;
-    const {idComerciante, titulo, calificacion,comentario} = req.body;
+    const {idComerciante, 
+        titulo, 
+        calificacion,
+        descripcion} = req.body;
+    if (idUsuario == idComerciante){
+        return res.status(400).json({message: 'No puedes comentar tu propio perfil'});
+    }
+    const comentario = {
+        Comerciante_idComerciante: idComerciante,
+        Usuario_idUsuario: idUsuario,
+        titulo,
+        calificacion,
+        descripcion
+    }
     try{
-        const nuevoComentario = await ComentarioDao.crearComentario(idComerciante, idUsuario, titulo, calificacion, comentario);
+        const nuevoComentario = await ComentarioDao.crearComentario(comentario);
         res.status(201).json(nuevoComentario);
     }catch(error){
         res.status(500).json( {message: error});
@@ -35,7 +77,13 @@ const comentariosPost = async (req, res = response) => {
 
 const comentariosPatch = async (req, res = response) => {
     const {idComentario} = req.params;
-    const {titulo, calificacion, descripcion} = req.body;
+    const comentarioSeleccionado = await ComentarioDao.getComentarioPorId(idComentario);
+    if (comentarioSeleccionado.idUsuario != req.usuario.Usuario_idUsuario){
+        return res.status(403).json({message: 'No puedes modificar un comentario que no es tuyo'});
+    }
+    const {titulo = comentarioSeleccionado.titulo, 
+        calificacion = comentarioSeleccionado.calificacion, 
+        descripcion = comentarioSeleccionado.descripcion} = req.body;
     try{
         const comentario = await ComentarioDao.modificarComentarioPorId(idComentario, titulo, calificacion, descripcion);
         res.status(200).json(comentario);
@@ -46,6 +94,10 @@ const comentariosPatch = async (req, res = response) => {
 
 const comentariosDelete = async (req, res = response) => {
     const {idComentario} = req.params;
+    const comentarioSeleccionado = await ComentarioDao.getComentarioPorId(idComentario);
+    if (comentarioSeleccionado.idUsuario != req.usuario.Usuario_idUsuario){
+        return res.status(403).json({message: 'No puedes eliminar un comentario que no es tuyo'});
+    }
     try{
         const comentario = await ComentarioDao.eliminarComentarioPorId(idComentario);
         res.status(204);
@@ -56,7 +108,10 @@ const comentariosDelete = async (req, res = response) => {
 
 module.exports = {
     comentariosComercianteGet,
+    comentarioGet,
+    comentariosGet,
     comentariosUsuarioGet,
+    comentariosComercianteGetCalificacion,
     comentariosPost,
     comentariosPatch,
     comentariosDelete

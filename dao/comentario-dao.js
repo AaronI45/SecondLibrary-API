@@ -1,4 +1,4 @@
-const { Comentarios } = require('../models');
+const { Comentarios, sequelize } = require('../models');
 
 class ComentarioDao{
     static async getComentariosComerciante(idComerciante){
@@ -7,6 +7,10 @@ class ComentarioDao{
                 Comerciante_idComerciante: idComerciante
             }
         });
+    }
+    
+    static async getComentarioPorId(idComentario){
+        return await Comentarios.findByPk(idComentario);
     }
 
     static async getComentariosUsuario(idUsuario){
@@ -17,14 +21,15 @@ class ComentarioDao{
         });
     }
 
-    static async crearComentario(idComerciante, idUsuario, titulo, calificacion, descripcion){
-        return await Comentarios.create({
-            Comerciante_idComerciante: idComerciante,
-            Usuario_idUsuario: idUsuario,
-            titulo,
-            calificacion,
-            descripcion
+    static async getPromedioCalificacion(idComerciante){
+        return await sequelize.query('SELECT AVG(calificacion) as promedio FROM Comentario WHERE Comerciante_idComerciante = :idComerciante', {
+            replacements: {idComerciante},
+            type: sequelize.QueryTypes.SELECT
         });
+    }
+
+    static async crearComentario(comentario){
+        return await Comentarios.create(comentario);
     }
 
     static async modificarComentarioPorId(idComentario, titulo, calificacion, descripcion){
