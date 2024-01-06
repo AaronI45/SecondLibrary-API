@@ -1,3 +1,4 @@
+const { raw } = require('mysql2');
 const { Comentarios, sequelize } = require('../models');
 
 class ComentarioDao{
@@ -9,6 +10,10 @@ class ComentarioDao{
         });
     }
     
+    static async listarComentarios(){
+        return await Comentarios.findAll();
+    }
+
     static async getComentarioPorId(idComentario){
         return await Comentarios.findByPk(idComentario);
     }

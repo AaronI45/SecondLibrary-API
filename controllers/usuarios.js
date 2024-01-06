@@ -43,8 +43,8 @@ const usuariosPost = async (req, res = response) => {
     const contrasenaHash = await hash(contrasena);
     const usuario = {
         idUsuario: 0,
-        Estado_usuario_idEstado_usuario: 1,
-        Tipo_Usuario_idTipo_Usuario,
+        Estado_usuario_idEstado_usuario: 2,
+        Tipo_Usuario_idTipo_Usuario: 2,
         nombreUsuario,
         contrasena: contrasenaHash,
         nombre,
