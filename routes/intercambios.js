@@ -3,7 +3,7 @@ const {Router} = require('express');
 const{
     intercambiosGet,
     intercambiosBusqueda,
-    intercambiosGetPorComerciante,
+    intercambiosGetPorIdUsuario,
     intercambiosGetPorId,
     intercambiosPost,
     intercambiosPatch,
@@ -15,7 +15,7 @@ const router = Router();
 
 router.get('/', intercambiosGet);
 router.get('/busqueda', intercambiosBusqueda);
-router.get('/comerciante/:idUsuario', intercambiosGetPorComerciante);
+router.get('/usuario/:idUsuario', intercambiosGetPorIdUsuario);
 router.get('/:idIntercambio', intercambiosGetPorId);
 router.post('/', [validarJWT], intercambiosPost);
 router.patch('/:idIntercambio',[validarJWT], intercambiosPatch);

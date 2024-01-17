@@ -6,6 +6,7 @@ const {
     comentariosGet,
     comentariosUsuarioGet,
     comentariosComercianteGetCalificacion,
+    comentariosComercianteGetCount,
     comentariosPost,
     comentariosPatch,
     comentariosDelete
@@ -19,6 +20,7 @@ router.get('/:idComentario', comentarioGet);
 router.get('/', comentariosGet);
 router.get('/usuarios/:idUsuario', comentariosUsuarioGet);
 router.get('/comerciantes/calificacion/:idComerciante', comentariosComercianteGetCalificacion);
+router.get('/comerciantes/count/:idComerciante', comentariosComercianteGetCount);
 router.post('/', [validarJWT], comentariosPost);
 router.patch('/:idComentario',[validarJWT], comentariosPatch);
 router.delete('/:idComentario',[validarJWT], comentariosDelete);

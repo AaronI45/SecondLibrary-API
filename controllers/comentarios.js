@@ -44,10 +44,20 @@ const comentariosUsuarioGet = async(req, res = response) => {
 const comentariosComercianteGetCalificacion = async(req, res = response) => {
     const {idComerciante} = req.params;
     try{
-        const comentarios = await ComentarioDao.getPromedioCalificacion(idComerciante);
-        res.json(comentarios);
+        const promedio = await ComentarioDao.getPromedioCalificacion(idComerciante);
+        return res.json(promedio);
     }catch(error){
-        res.status(500).json( {message: error});
+        return res.status(500).json( {message: error});
+    }
+}
+
+const comentariosComercianteGetCount = async(req, res = response) => {
+    const {idComerciante} = req.params;
+    try{
+        const count = await ComentarioDao.getCountComentarios(idComerciante);
+        return res.json(count);
+    }catch(error){
+        return res.status(500).json( {message: error});
     }
 }
 
@@ -111,6 +121,7 @@ module.exports = {
     comentarioGet,
     comentariosGet,
     comentariosUsuarioGet,
+    comentariosComercianteGetCount,
     comentariosComercianteGetCalificacion,
     comentariosPost,
     comentariosPatch,

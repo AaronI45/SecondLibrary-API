@@ -20,10 +20,10 @@ class IntercambioDao{
         });
     }
 
-    static async getIntercambiosPorIdComerciante(idUsuario){
+    static async getIntercambiosPorIdUsuario(idUsuario){
         return await Intercambios.findAll({
             where: {
-                Comerciante_idComerciante: idUsuario
+                Usuario_idUsuario: idUsuario
             }
         });
     }
@@ -32,13 +32,12 @@ class IntercambioDao{
         return await Intercambios.findByPk(idIntercambio);
     }
 
-    static async crearIntercambio(isbn, estadoLibro, idUsuario){
+    static async crearIntercambio(nuevoIntercambio, idUsuario){
         return await Intercambios.create({
             idIntercambio: 0,
-            Comerciante_idComerciante: idUsuario,
-            isbnComerciante: isbn,
-            estadoIntercambio: 'activo',
-            estadoLibro: estadoLibro
+            Oferta_Intercambio_idOferta_Intercambio: nuevoIntercambio.Oferta_Intercambio_idOferta_Intercambio,
+            Usuario_idUsuario: idUsuario,
+            isbnUsuario: nuevoIntercambio.isbnUsuario,
         });
     }
 

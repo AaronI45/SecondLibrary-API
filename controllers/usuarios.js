@@ -71,10 +71,8 @@ const usuariosLogin = async (req, res = response) => {
             return res.status(401).json({message: 'Usuario o contraseña incorrectos'});
         }
         const token = await generarJWT(usuario);
-        res.json({
-            usuario,
-            token
-        });
+        res.setHeader('token', token);
+        res.json(usuario);
     }catch(error){
         console.error(error);
         res.status(401).json({message: error});

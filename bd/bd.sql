@@ -56,12 +56,12 @@ CREATE TABLE IF NOT EXISTS `SecondLibrary`.`Usuario` (
   CONSTRAINT `fk_Comerciante_Tipo_Usuario1`
     FOREIGN KEY (`Tipo_Usuario_idTipo_Usuario`)
     REFERENCES `SecondLibrary`.`Tipo_Usuario` (`idTipo_Usuario`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Comerciante_Estado_usuario1`
     FOREIGN KEY (`Estado_usuario_idEstado_usuario`)
     REFERENCES `SecondLibrary`.`Estado_usuario` (`idEstado_usuario`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -78,12 +78,12 @@ CREATE TABLE IF NOT EXISTS `SecondLibrary`.`Mensaje` (
   CONSTRAINT `fk_Mensaje_Chat1`
     FOREIGN KEY (`Chat_idChat`)
     REFERENCES `SecondLibrary`.`Chat` (`idChat`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Mensaje_Usuario1`
     FOREIGN KEY (`Usuario_idUsuario`)
     REFERENCES `SecondLibrary`.`Usuario` (`idUsuario`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -102,32 +102,54 @@ CREATE TABLE IF NOT EXISTS `SecondLibrary`.`Comentario` (
   CONSTRAINT `fk_Comentario_Usuario1`
     FOREIGN KEY (`Usuario_idUsuario`)
     REFERENCES `SecondLibrary`.`Usuario` (`idUsuario`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Comentario_Comerciante1`
     FOREIGN KEY (`Comerciante_idComerciante`)
     REFERENCES `SecondLibrary`.`Usuario` (`idUsuario`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `SecondLibrary`.`Oferta_Intercambio` (
+  `idOferta_Intercambio` INT NOT NULL AUTO_INCREMENT,
+  `Comerciante_idComerciante` INT NOT NULL,
+  `isbnComerciante` VARCHAR(20) NOT NULL,
+  `estadoIntercambio` VARCHAR(45) NOT NULL,
+  `estadoLibro` VARCHAR(300) NOT NULL,
+  `fechaDeCreacion` DATE NULL,
+  PRIMARY KEY (`idOferta_Intercambio`, `Comerciante_idComerciante`),
+    FOREIGN KEY (`Comerciante_idComerciante`)
+    REFERENCES `SecondLibrary`.`Usuario` (`idUsuario`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION
+)
+ENGINE = InnoDB;
+
 
 -- -----------------------------------------------------
 -- Table `SecondLibrary`.`Intercambio`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SecondLibrary`.`Intercambio` (
   `idIntercambio` INT NOT NULL AUTO_INCREMENT,
-  `Comerciante_idComerciante` INT NOT NULL,
-  `Usuario_idUsuario` INT NULL,
-  `isbnComerciante` VARCHAR(20) NOT NULL,
-  `isbnUsuario` VARCHAR(20) NULL,
-  `estadoIntercambio` VARCHAR(45) NOT NULL,
-  `estadoLibro` VARCHAR(300) NOT NULL,
-  `fechaDeCreacion` DATE NULL,
-  `fechaDeFinalizacion` DATE NULL,
-  PRIMARY KEY (`idIntercambio`, `Comerciante_idComerciante`),
-    FOREIGN KEY (`Comerciante_idComerciante`)
+  `Oferta_Intercambio_idOferta_Intercambio` INT NOT NULL,
+  `Usuario_idUsuario` INT NOT NULL,
+  `isbnUsuario` VARCHAR(20) NOT NULL,
+  `fechaDeFinalizacion` DATE NOT NULL,
+  PRIMARY KEY (`idIntercambio`, `Usuario_idUsuario`, `Oferta_Intercambio_idOferta_Intercambio`),
+    FOREIGN KEY (`Usuario_idUsuario`)
     REFERENCES `SecondLibrary`.`Usuario` (`idUsuario`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Intercambio_Oferta_Intercambio1`
+    FOREIGN KEY (`Oferta_Intercambio_idOferta_Intercambio`)
+    REFERENCES `SecondLibrary`.`Oferta_Intercambio` (`idOferta_Intercambio`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Intercambio_Usuario1`
+  FOREIGN KEY (`Usuario_idUsuario`)
+    REFERENCES `SecondLibrary`.`Usuario` (`idUsuario`)
+    ON DELETE CASCADE
     ON UPDATE NO ACTION
 )
 ENGINE = InnoDB;
@@ -143,12 +165,12 @@ CREATE TABLE IF NOT EXISTS `SecondLibrary`.`Usuario_Con_Chat` (
   CONSTRAINT `fk_Chat_has_Usuario_Chat1`
     FOREIGN KEY (`Chat_idChat`)
     REFERENCES `SecondLibrary`.`Chat` (`idChat`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Chat_has_Usuario_Usuario1`
     FOREIGN KEY (`Usuario_idUsuario`)
     REFERENCES `SecondLibrary`.`Usuario` (`idUsuario`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 

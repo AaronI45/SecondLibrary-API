@@ -33,6 +33,13 @@ class ComentarioDao{
         });
     }
 
+    static async getCountComentarios(idComerciante){
+        return await sequelize.query('SELECT COUNT(*) as count FROM Comentario WHERE Comerciante_idComerciante = :idComerciante', {
+            replacements: {idComerciante},
+            type: sequelize.QueryTypes.SELECT
+        });
+    }
+
     static async crearComentario(comentario){
         return await Comentarios.create(comentario);
     }
