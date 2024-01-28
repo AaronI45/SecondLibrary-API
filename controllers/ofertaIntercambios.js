@@ -52,7 +52,19 @@ const ofertasIntercambiosPost = async(req, res = response) => {
     }
 }
 
-const ofertasIntercambiosPatch = async(req, res = response) => {
+const ofertasIntercambiosPatch = async (req, res = response) =>{
+    const {idOfertaIntercambio} = req.params;
+    const {estado} = req.body;
+
+    try{
+        const ofertaIntercambio = await OfertaIntercambioDao.actualizarEstado(idOfertaIntercambio, estado);
+        res.json(ofertaIntercambio); 
+    }catch(error){
+        res.status(500).json( {message: error});
+    }
+}
+
+const ofertasIntercambiosPut= async(req, res = response) => {
     const {idOfertaIntercambio} = req.params;
     const ofertaIntercambioEncontrada = await OfertaIntercambioDao.getOfertaIntercambioPorId(idOfertaIntercambio);
     if(!ofertaIntercambioEncontrada){
@@ -90,5 +102,6 @@ module.exports = {
     ofertasIntercambioGetPorComerciante,
     ofertasIntercambiosPost,
     ofertasIntercambiosPatch,
+    ofertasIntercambiosPut,
     ofertasIntercambiosDelete
 }

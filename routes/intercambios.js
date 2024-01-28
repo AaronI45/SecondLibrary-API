@@ -4,6 +4,7 @@ const{
     intercambiosGet,
     intercambiosBusqueda,
     intercambiosGetPorIdUsuario,
+    intercambiosGetPorIdOfertaIntercambio,
     intercambiosGetPorId,
     intercambiosPost,
     intercambiosPatch,
@@ -16,6 +17,7 @@ const router = Router();
 router.get('/', intercambiosGet);
 router.get('/busqueda', intercambiosBusqueda);
 router.get('/usuario/:idUsuario', intercambiosGetPorIdUsuario);
+router.get('/oferta/:idOfertaIntercambio', intercambiosGetPorIdOfertaIntercambio);
 router.get('/:idIntercambio', intercambiosGetPorId);
 router.post('/', [validarJWT], intercambiosPost);
 router.patch('/:idIntercambio',[validarJWT], intercambiosPatch);

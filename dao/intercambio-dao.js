@@ -32,6 +32,14 @@ class IntercambioDao{
         return await Intercambios.findByPk(idIntercambio);
     }
 
+    static async buscarPorIdOfertaIntercambio(idOferta_Intercambio){
+        return await Intercambios.findAll({
+            where: {
+                Oferta_Intercambio_idOferta_Intercambio : idOferta_Intercambio
+            }
+        })
+    }
+
     static async crearIntercambio(nuevoIntercambio, idUsuario){
         return await Intercambios.create({
             idIntercambio: 0,

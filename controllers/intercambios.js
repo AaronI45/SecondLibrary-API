@@ -46,11 +46,21 @@ const intercambiosGetPorId = async(req, res = response) => {
     }
 }
 
+const intercambiosGetPorIdOfertaIntercambio = async(req, res = response) => {
+    const{idOfertaIntercambio} = req.params
+    try{
+        const listaIntercambios = await IntercambioDao.buscarPorIdOfertaIntercambio(idOfertaIntercambio);
+        return res.json(listaIntercambios);
+    }catch(error){
+        res.status(500).json( {message: error.toString()});
+    }
+}
+
 const intercambiosPost = async(req, res = response) => {
     try{
         const nuevoIntercambio = await IntercambioDao.crearIntercambio(req.body, req.usuario.idUsuario);
         if (nuevoIntercambio){
-            await OfertaIntercambioDao.actualizarOfertaIntercambio(req.body.Oferta_Intercambio_idOferta_Intercambio, {estadoIntercambio: 'Finalizado'});
+            await OfertaIntercambioDao.actualizarOfertaIntercambio(req.body.Oferta_Intercambio_idOferta_Intercambio, {estadoIntercambio: 'En proceso'});
         }
         res.status(201).json(nuevoIntercambio);
     }catch(error){
@@ -99,6 +109,7 @@ module.exports = {
     intercambiosGet,
     intercambiosBusqueda,
     intercambiosGetPorIdUsuario,
+    intercambiosGetPorIdOfertaIntercambio,
     intercambiosGetPorId,
     intercambiosPost,
     intercambiosPatch,

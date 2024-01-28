@@ -52,6 +52,14 @@ class OfertaIntercambioDao {
         });
     }
 
+    static async actualizarEstado(idOferta_Intercambio, estado){
+        return await OfertasIntercambios.update({estadoIntercambio : estado}, {
+            where:{
+                idOferta_Intercambio
+            } 
+        });
+    }
+
     static async eliminarOfertaIntercambio(idOferta_Intercambio) {
         return await OfertasIntercambios.destroy({
             where: {
