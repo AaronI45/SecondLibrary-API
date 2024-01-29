@@ -5,7 +5,6 @@ const {
     usuariosGetPorId,
     usuariosPost,
     usuariosLogin,
-    usuariosPatchEstadoUsuario,
     usuariosPutActualizar,
     usuariosDelete
     // eliminarUsuario,
@@ -23,8 +22,7 @@ router.get('/', usuariosGet);
 router.get('/:idUsuario', usuariosGetPorId);
 router.post('/',[validarCamposUsuario], usuariosPost);
 router.post('/login', usuariosLogin);
-router.patch('/:idUsuario', usuariosPatchEstadoUsuario);
-router.put('/:idUsuario',[validarJWT], usuariosPutActualizar);
+router.put('/:idUsuario',usuariosPutActualizar);
 router.delete('/', [validarJWT], usuariosDelete);
 
 

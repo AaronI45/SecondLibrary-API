@@ -31,7 +31,7 @@ class UsuarioDao {
         }, {attributes: {exclude: ['contrasena']}});
     }
 
-    static async actualizarUsuario(idUsuario, usuario) {
+    static async actualizarUsuarioPorId(idUsuario, usuario) {
         return await Usuarios.update(usuario, {
             where: {
                 idUsuario
@@ -39,16 +39,6 @@ class UsuarioDao {
         });
     }
     
-    static async actualizarEstadoUsuario(idUsuario, nuevoEstado) {
-        return await Usuarios.update({
-            Estado_usuario_idEstado_usuario: nuevoEstado
-        }, {
-            where: {
-                idUsuario
-            }
-        });
-    }
-
     static async eliminarUsuario(idUsuario) {
         return await Usuarios.destroy({
             where: {
